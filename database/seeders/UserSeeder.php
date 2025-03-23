@@ -16,8 +16,8 @@ class UserSeeder extends Seeder
         $user = [
             [
                 'id' => Str::uuid(),
-                'name' => 'Wiku Karno',
-                'email' => 'hi@wikukarno.com',
+                'name' => 'Admin',
+                'email' => 'admin@mail.com',
                 'role' => 'admin',
                 'password' => bcrypt('password'),
                 'created_at' => now(),
