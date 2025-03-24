@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Edit3, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Category = {
     id: string;
@@ -24,11 +24,33 @@ type PaginatedCategory = {
     }[];
 };
 
+type FlashProps = {
+    flash: {
+        success?: string;
+    };
+    errors: Record<string, string>;
+};
+
 export default function Index() {
-    const { props } = usePage<PageProps & { categories: PaginatedCategory }>();
+    const { props } = usePage<
+        PageProps & FlashProps & { categories: PaginatedCategory }
+    >();
     const categories = props.categories;
 
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
+
+    const [showFlash, setShowFlash] = useState(true);
+
+    useEffect(() => {
+        if (props.flash?.success || props.errors?.error) {
+            setShowFlash(true);
+            const timer = setTimeout(() => {
+                setShowFlash(false);
+            }, 4000); // auto hide after 4 seconds
+
+            return () => clearTimeout(timer);
+        }
+    }, [props.flash, props.errors]);
 
     const handleConfirmDelete = (id: string) => {
         setConfirmingId(id);
@@ -63,6 +85,31 @@ export default function Index() {
                 <div className="py-12">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                         <div className="overflow-hidden rounded-lg bg-white shadow-sm">
+                            {/* Flash Message */}
+                            {showFlash && props.flash?.success && (
+                                <div className="mb-4 flex items-start justify-between rounded bg-green-100 px-4 py-2 text-sm text-green-700">
+                                    <span>{props.flash.success}</span>
+                                    <button
+                                        onClick={() => setShowFlash(false)}
+                                        className="ml-4 text-green-700 hover:text-green-900"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            )}
+
+                            {showFlash && props.errors?.error && (
+                                <div className="mb-4 flex items-start justify-between rounded bg-red-100 px-4 py-2 text-sm text-red-700">
+                                    <span>{props.errors.error}</span>
+                                    <button
+                                        onClick={() => setShowFlash(false)}
+                                        className="ml-4 text-red-700 hover:text-red-900"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="flex items-center justify-between border-b p-6">
                                 <TextHeaderCard
                                     title="Category Project"
@@ -188,13 +235,13 @@ export default function Index() {
                     </div>
                 </div>
             </AuthenticatedLayout>
+
             <ConfirmationModal
                 isOpen={!!confirmingId}
                 onClose={handleCancelDelete}
                 onConfirm={handleDelete}
                 message="Are you sure you want to delete this category project?"
             />
-            ;
         </>
     );
 }

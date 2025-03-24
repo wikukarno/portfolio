@@ -10,6 +10,7 @@ use App\Models\TechStack;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,5 +34,12 @@ class AppServiceProvider extends ServiceProvider
         CategoryProject::creating(fn($model) => $model->id = Str::uuid());
         ProjectImage::creating(fn($model) => $model->id = Str::uuid());
         ProjectTechStack::creating(fn($model) => $model->id = Str::uuid());
+
+        Inertia::share('flash', function () {
+            return [
+                'success' => session('success'),
+                'error' => session('error'),
+            ];
+        });
     }
 }

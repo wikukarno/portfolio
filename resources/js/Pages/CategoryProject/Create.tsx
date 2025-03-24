@@ -68,14 +68,14 @@ export default function Create({ name, description }: CategoryProjectProps) {
                                 description="Create a new category project."
                             />
 
-                            {/* ✅ Success Message */}
+                            {/* Success Message */}
                             {showSuccess && (
                                 <div className="mt-4 rounded bg-green-100 p-4 text-sm text-green-800">
                                     Category created successfully!
                                 </div>
                             )}
 
-                            {/* ❌ Error Summary */}
+                            {/* Error Summary */}
                             {Object.keys(errors).length > 0 && (
                                 <div className="mt-4 rounded bg-red-100 p-4 text-sm text-red-700">
                                     Please fix the errors below.
