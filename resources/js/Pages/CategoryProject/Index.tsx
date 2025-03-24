@@ -222,12 +222,19 @@ export default function Index() {
                                             className={`rounded border px-3 py-1 text-sm ${
                                                 link.active
                                                     ? 'border-blue-600 bg-blue-600 text-white'
-                                                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                                                    : !link.url
+                                                      ? 'cursor-not-allowed border-gray-300 text-gray-400'
+                                                      : 'border-gray-300 text-gray-700 hover:bg-gray-100'
                                             }`}
-                                            dangerouslySetInnerHTML={{
-                                                __html: link.label,
-                                            }}
-                                        />
+                                        >
+                                            {link.label ===
+                                            'pagination.previous'
+                                                ? '« Previous'
+                                                : link.label ===
+                                                    'pagination.next'
+                                                  ? 'Next »'
+                                                  : link.label}
+                                        </Link>
                                     ))}
                                 </div>
                             </div>
