@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryProject\StoreCategoryProjectRequest;
 use App\Http\Requests\CategoryProject\UpdateCategoryProjectRequest;
 use App\Models\CategoryProject;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -24,7 +25,6 @@ class CategoryProjectController extends Controller
                 'categories' => $categories,
             ]);
         } catch (\Throwable $e) {
-            Log::error('CategoryProjectController@index error: ' . $e->getMessage());
             return back()->withErrors('Failed to load category projects.');
         }
     }
@@ -50,7 +50,6 @@ class CategoryProjectController extends Controller
 
             return back()->with('success', 'Category created successfully!');
         } catch (\Throwable $e) {
-            Log::error('CategoryProjectController@store error: ' . $e->getMessage());
             return back()->withErrors('Failed to create category.');
         }
     }
@@ -60,21 +59,23 @@ class CategoryProjectController extends Controller
         try {
             $category = CategoryProject::where('id', $id)
                 ->where('user_id', Auth::id())
-                ->firstOrFail();
+                ->firstOrFail()
+                ->only(['id', 'name', 'icon', 'description']);
 
-            if (app()->runningUnitTests()) {
-                return response()->json($category);
-            }
+            // for unit test
+            // if (app()->runningUnitTests()) {
+            //     return response()->json($category);
+            // }
 
             return Inertia::render('CategoryProject/Edit', [
                 'category' => $category,
             ]);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors(['error' => 'Category not found.']);
         } catch (\Throwable $e) {
-            Log::error('CategoryProjectController@edit error: ' . $e->getMessage());
-            return back()->withErrors('Failed to load category for edit.');
+            return back()->withErrors(['error' => 'Failed to load category for edit.']);
         }
     }
-
     public function update(UpdateCategoryProjectRequest $request, string $id)
     {
         try {
@@ -84,16 +85,20 @@ class CategoryProjectController extends Controller
 
             $validated = $request->validated();
 
-            $category->update([
-                'name' => $validated['name'],
-                'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-                'icon' => $validated['icon'] ?? null,
-                'description' => $validated['description'] ?? null,
-            ]);
+            if ($request->hasFile('icon')) {
+                if ($category->icon) {
+                    Storage::disk('public')->delete($category->icon);
+                }
+
+                $validated['icon'] = $request->file('icon')->store('category_icons', 'public');
+            } else {
+                unset($validated['icon']);
+            }
+
+            $category->update($validated);
 
             return back()->with('success', 'Category updated successfully!');
         } catch (\Throwable $e) {
-            Log::error('CategoryProjectController@update error: ' . $e->getMessage());
             return back()->withErrors('Failed to update category.');
         }
     }
@@ -109,7 +114,6 @@ class CategoryProjectController extends Controller
 
             return back()->with('success', 'Category deleted successfully');
         } catch (\Throwable $e) {
-            Log::error('CategoryProjectController@destroy error: ' . $e->getMessage());
             return back()->withErrors('Failed to delete category.');
         }
     }

@@ -27,7 +27,7 @@ Route::prefix('admin')
         Route::get('/category/project/create', [CategoryProjectController::class, 'create'])->name('category.project.create');
         Route::post('/category/project', [CategoryProjectController::class, 'store'])->name('category.project.store');
         Route::get('/category/project/{categoryProject}/edit', [CategoryProjectController::class, 'edit'])->name('category.project.edit');
-        Route::patch('/category/project/{categoryProject}', [CategoryProjectController::class, 'update'])->name('category.project.update');
+        Route::put('/category/project/{categoryProject}', [CategoryProjectController::class, 'update'])->name('category.project.update');
         Route::delete('/category/project/{categoryProject}', [CategoryProjectController::class, 'destroy'])->name('category.project.destroy');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

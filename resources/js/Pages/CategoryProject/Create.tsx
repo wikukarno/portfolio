@@ -29,13 +29,12 @@ export default function Create({ name, description }: CategoryProjectProps) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        setShowSuccess(false); // reset
+        setShowSuccess(false);
 
         post(route('admin.category.project.store'), {
             onSuccess: () => {
                 setShowSuccess(true);
 
-                // Kosongkan form
                 setData({
                     name: '',
                     icon: null,
@@ -45,7 +44,7 @@ export default function Create({ name, description }: CategoryProjectProps) {
             onError: () => {
                 setShowSuccess(false);
             },
-            forceFormData: true, // penting untuk upload file!
+            forceFormData: true,
         });
     };
 
@@ -68,14 +67,12 @@ export default function Create({ name, description }: CategoryProjectProps) {
                                 description="Create a new category project."
                             />
 
-                            {/* Success Message */}
                             {showSuccess && (
                                 <div className="mt-4 rounded bg-green-100 p-4 text-sm text-green-800">
                                     Category created successfully!
                                 </div>
                             )}
 
-                            {/* Error Summary */}
                             {Object.keys(errors).length > 0 && (
                                 <div className="mt-4 rounded bg-red-100 p-4 text-sm text-red-700">
                                     Please fix the errors below.

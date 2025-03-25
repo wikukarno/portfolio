@@ -32,7 +32,7 @@ class UpdateCategoryProjectRequest extends FormRequest
                 'max:255',
                 Rule::unique('category_projects', 'slug')->ignore($id),
             ],
-            'icon' => 'nullable|string|max:255',
+            'icon' => 'nullable|file|mimes:svg,png|max:2048',
             'description' => 'nullable|string',
         ];
     }

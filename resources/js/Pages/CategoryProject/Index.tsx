@@ -46,7 +46,7 @@ export default function Index() {
             setShowFlash(true);
             const timer = setTimeout(() => {
                 setShowFlash(false);
-            }, 4000); // auto hide after 4 seconds
+            }, 4000);
 
             return () => clearTimeout(timer);
         }
@@ -71,6 +71,12 @@ export default function Index() {
         }
     };
 
+    const decodeEntities = (html: string) => {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    };
+
     return (
         <>
             <AuthenticatedLayout
@@ -85,7 +91,6 @@ export default function Index() {
                 <div className="py-12">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                         <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            {/* Flash Message */}
                             {showFlash && props.flash?.success && (
                                 <div className="mb-4 flex items-start justify-between rounded bg-green-100 px-4 py-2 text-sm text-green-700">
                                     <span>{props.flash.success}</span>
@@ -227,13 +232,7 @@ export default function Index() {
                                                       : 'border-gray-300 text-gray-700 hover:bg-gray-100'
                                             }`}
                                         >
-                                            {link.label ===
-                                            'pagination.previous'
-                                                ? '« Previous'
-                                                : link.label ===
-                                                    'pagination.next'
-                                                  ? 'Next »'
-                                                  : link.label}
+                                            {decodeEntities(link.label)}
                                         </Link>
                                     ))}
                                 </div>
