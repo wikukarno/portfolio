@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryProject\CategoryProjectController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TechStack\TechStackController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,12 +24,18 @@ Route::prefix('admin')
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
+        // Route Category Project
         Route::get('/category/project', [CategoryProjectController::class, 'index'])->name('category.project.index');
         Route::get('/category/project/create', [CategoryProjectController::class, 'create'])->name('category.project.create');
         Route::post('/category/project', [CategoryProjectController::class, 'store'])->name('category.project.store');
         Route::get('/category/project/{categoryProject}/edit', [CategoryProjectController::class, 'edit'])->name('category.project.edit');
         Route::put('/category/project/{categoryProject}', [CategoryProjectController::class, 'update'])->name('category.project.update');
         Route::delete('/category/project/{categoryProject}', [CategoryProjectController::class, 'destroy'])->name('category.project.destroy');
+        // End Route Category Project
+
+        // Route Tech Stack
+        Route::get('/tech-stack', [TechStackController::class, 'index'])->name('tech.stack.index');
+        Route::get('/tech-stack/create', [TechStackController::class, 'create'])->name('tech.stack.create');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

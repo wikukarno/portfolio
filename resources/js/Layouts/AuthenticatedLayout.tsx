@@ -45,6 +45,17 @@ export default function Authenticated({
                                     Category Projects
                                 </NavLink>
                             </div>
+
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink
+                                    href={route('admin.tech.stack.index')}
+                                    active={route().current(
+                                        'admin.tech.stack.index',
+                                    )}
+                                >
+                                    Tech Stack
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
