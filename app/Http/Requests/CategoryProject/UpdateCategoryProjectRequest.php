@@ -22,7 +22,7 @@ class UpdateCategoryProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('category_project')?->id ?? $this->route('id');
+        $id = $this->route('id');
 
         return [
             'name' => 'required|string|max:255',

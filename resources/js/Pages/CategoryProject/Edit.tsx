@@ -103,7 +103,7 @@ export default function Edit() {
 
                             {showSuccess && (
                                 <div className="mt-4 rounded bg-green-100 p-4 text-sm text-green-800">
-                                    Category updated successfully!
+                                    Data updated successfully!
                                 </div>
                             )}
                             {Object.keys(errors).length > 0 && (

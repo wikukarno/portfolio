@@ -89,7 +89,7 @@ export default function Create({ name, description }: CategoryProjectProps) {
 
                             {showSuccess && (
                                 <div className="mt-4 rounded bg-green-100 p-4 text-sm text-green-800">
-                                    Category created successfully!
+                                    Data created successfully!
                                 </div>
                             )}
 

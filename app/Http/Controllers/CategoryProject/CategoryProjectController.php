@@ -112,7 +112,7 @@ class CategoryProjectController extends Controller
 
             $category->delete();
 
-            return back()->with('success', 'Category deleted successfully');
+            return back()->with('success', 'Data deleted successfully');
         } catch (\Throwable $e) {
             return back()->withErrors('Failed to delete category.');
         }

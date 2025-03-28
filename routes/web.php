@@ -28,9 +28,9 @@ Route::prefix('admin')
         Route::get('/category/project', [CategoryProjectController::class, 'index'])->name('category.project.index');
         Route::get('/category/project/create', [CategoryProjectController::class, 'create'])->name('category.project.create');
         Route::post('/category/project/store', [CategoryProjectController::class, 'store'])->name('category.project.store');
-        Route::get('/category/project/{categoryProject}/edit', [CategoryProjectController::class, 'edit'])->name('category.project.edit');
-        Route::put('/category/project/{categoryProject}', [CategoryProjectController::class, 'update'])->name('category.project.update');
-        Route::delete('/category/project/{categoryProject}', [CategoryProjectController::class, 'destroy'])->name('category.project.destroy');
+        Route::get('/category/project/{id}/edit', [CategoryProjectController::class, 'edit'])->name('category.project.edit');
+        Route::put('/category/project/{id}', [CategoryProjectController::class, 'update'])->name('category.project.update');
+        Route::delete('/category/project/{id}', [CategoryProjectController::class, 'destroy'])->name('category.project.destroy');
         // End Route Category Project
 
         // Route Tech Stack
