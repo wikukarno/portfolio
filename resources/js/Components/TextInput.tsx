@@ -17,9 +17,8 @@ export default forwardRef(function TextInput(
 ) {
     const localRef = useRef<HTMLInputElement>(null);
 
-    useImperativeHandle(ref, () => ({
-        focus: () => localRef.current?.focus(),
-    }));
+    // ✅ Fully expose the real DOM element
+    useImperativeHandle(ref, () => localRef.current as HTMLInputElement);
 
     useEffect(() => {
         if (isFocused) {

@@ -142,7 +142,7 @@ export default function Edit() {
                                 <div className="mt-4">
                                     <InputLabel htmlFor="icon" value="Icon" />
 
-                                    {/* Tampilkan gambar lama jika belum ada file baru */}
+                                    {/* Preview Icon */}
                                     {previewIcon && (
                                         <img
                                             src={previewIcon}
@@ -156,7 +156,7 @@ export default function Edit() {
                                         id="icon"
                                         name="icon"
                                         className="mt-1 block w-full rounded-md border-gray-300 p-2 ring-1 ring-gray-300"
-                                        onChange={handleFileChange} // Pakai handler yang sudah kita buat
+                                        onChange={handleFileChange}
                                     />
                                     {errors.icon && (
                                         <p className="mt-1 text-sm text-red-600">

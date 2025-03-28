@@ -27,7 +27,7 @@ Route::prefix('admin')
         // Route Category Project
         Route::get('/category/project', [CategoryProjectController::class, 'index'])->name('category.project.index');
         Route::get('/category/project/create', [CategoryProjectController::class, 'create'])->name('category.project.create');
-        Route::post('/category/project', [CategoryProjectController::class, 'store'])->name('category.project.store');
+        Route::post('/category/project/store', [CategoryProjectController::class, 'store'])->name('category.project.store');
         Route::get('/category/project/{categoryProject}/edit', [CategoryProjectController::class, 'edit'])->name('category.project.edit');
         Route::put('/category/project/{categoryProject}', [CategoryProjectController::class, 'update'])->name('category.project.update');
         Route::delete('/category/project/{categoryProject}', [CategoryProjectController::class, 'destroy'])->name('category.project.destroy');
@@ -36,6 +36,11 @@ Route::prefix('admin')
         // Route Tech Stack
         Route::get('/tech-stack', [TechStackController::class, 'index'])->name('tech.stack.index');
         Route::get('/tech-stack/create', [TechStackController::class, 'create'])->name('tech.stack.create');
+        Route::post('/tech-stack/store', [TechStackController::class, 'store'])->name('tech.stack.store');
+        Route::get('/tech-stack/{techStack}/edit', [TechStackController::class, 'edit'])->name('tech.stack.edit');
+        Route::put('/tech-stack/{techStack}', [TechStackController::class, 'update'])->name('tech.stack.update');
+        Route::delete('/tech-stack/{techStack}', [TechStackController::class, 'destroy'])->name('tech.stack.destroy');
+        // End Route Tech Stack
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

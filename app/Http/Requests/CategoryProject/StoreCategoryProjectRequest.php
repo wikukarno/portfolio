@@ -24,7 +24,7 @@ class StoreCategoryProjectRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:category_projects,slug',
-            'icon' => 'nullable|string|max:255',
+            'icon' => 'nullable|file|mimes:svg,png|max:2048',
             'description' => 'nullable|string',
         ];
     }

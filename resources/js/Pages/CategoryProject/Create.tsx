@@ -5,7 +5,7 @@ import TextHeaderCard from '@/Components/TextHeaderCard';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useRef, useState } from 'react';
 
 type CategoryProjectProps = {
     name: string;
@@ -15,6 +15,8 @@ type CategoryProjectProps = {
 
 export default function Create({ name, description }: CategoryProjectProps) {
     const [showSuccess, setShowSuccess] = useState(false);
+    const [previewIcon, setPreviewIcon] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { data, setData, post, processing, errors } = useForm<{
         name: string;
@@ -26,6 +28,18 @@ export default function Create({ name, description }: CategoryProjectProps) {
         description: description ?? '',
     });
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+
+        if (file) {
+            setData('icon', file);
+            setPreviewIcon(URL.createObjectURL(file)); // 👈 create preview URL
+        } else {
+            setData('icon', null);
+            setPreviewIcon(null);
+        }
+    };
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -34,16 +48,22 @@ export default function Create({ name, description }: CategoryProjectProps) {
         post(route('admin.category.project.store'), {
             onSuccess: () => {
                 setShowSuccess(true);
+                setPreviewIcon(null);
 
                 setData({
                     name: '',
                     icon: null,
                     description: '',
                 });
+
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
             },
             onError: () => {
                 setShowSuccess(false);
             },
+
             forceFormData: true,
         });
     };
@@ -108,17 +128,22 @@ export default function Create({ name, description }: CategoryProjectProps) {
 
                                 <div className="mt-4">
                                     <InputLabel htmlFor="icon" value="Icon" />
+
+                                    {/* Preview Icon */}
+                                    {previewIcon && (
+                                        <img
+                                            src={previewIcon}
+                                            alt="Icon Preview"
+                                            className="mb-2 h-12 w-12 rounded-md border object-contain"
+                                        />
+                                    )}
                                     <TextInput
                                         type="file"
                                         id="icon"
                                         name="icon"
                                         className="mt-1 block w-full rounded-md border-gray-300 p-2 ring-1 ring-gray-300"
-                                        onChange={(e) =>
-                                            setData(
-                                                'icon',
-                                                e.target.files?.[0] ?? null,
-                                            )
-                                        }
+                                        onChange={handleFileChange}
+                                        ref={fileInputRef}
                                     />
                                     {errors.icon && (
                                         <p className="mt-1 text-sm text-red-600">

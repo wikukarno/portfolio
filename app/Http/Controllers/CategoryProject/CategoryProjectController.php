@@ -44,7 +44,7 @@ class CategoryProjectController extends Controller
                 'user_id' => Auth::id(),
                 'name' => $validated['name'],
                 'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-                'icon' => $validated['icon'] ?? null,
+                'icon' => $request->file('icon')->store('assets/category_icons', 'public'),
                 'description' => $validated['description'] ?? null,
             ]);
 
@@ -90,7 +90,7 @@ class CategoryProjectController extends Controller
                     Storage::disk('public')->delete($category->icon);
                 }
 
-                $validated['icon'] = $request->file('icon')->store('category_icons', 'public');
+                $validated['icon'] = $request->file('icon')->store('assets/category_icons', 'public');
             } else {
                 unset($validated['icon']);
             }
