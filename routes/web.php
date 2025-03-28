@@ -37,9 +37,9 @@ Route::prefix('admin')
         Route::get('/tech-stack', [TechStackController::class, 'index'])->name('tech.stack.index');
         Route::get('/tech-stack/create', [TechStackController::class, 'create'])->name('tech.stack.create');
         Route::post('/tech-stack/store', [TechStackController::class, 'store'])->name('tech.stack.store');
-        Route::get('/tech-stack/{techStack}/edit', [TechStackController::class, 'edit'])->name('tech.stack.edit');
-        Route::put('/tech-stack/{techStack}', [TechStackController::class, 'update'])->name('tech.stack.update');
-        Route::delete('/tech-stack/{techStack}', [TechStackController::class, 'destroy'])->name('tech.stack.destroy');
+        Route::get('/tech-stack/{id}/edit', [TechStackController::class, 'edit'])->name('tech.stack.edit');
+        Route::put('/tech-stack/{id}', [TechStackController::class, 'update'])->name('tech.stack.update');
+        Route::delete('/tech-stack/{id}', [TechStackController::class, 'destroy'])->name('tech.stack.destroy');
         // End Route Tech Stack
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

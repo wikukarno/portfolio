@@ -4,61 +4,73 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TextHeaderCard from '@/Components/TextHeaderCard';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler, useRef, useState } from 'react';
+import { PageProps } from '@/types';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { FormEventHandler, useState } from 'react';
 
 type TechStackProps = {
+    id: string;
     name: string;
-    icon?: string;
+    icon?: string | null;
 };
 
-export default function Create({ name }: TechStackProps) {
+export default function Edit() {
+    const { props } = usePage<PageProps & { tech: TechStackProps }>();
+
+    const tech = props.tech ?? {
+        id: '',
+        name: '',
+        icon: null as File | null,
+        description: '',
+    };
+
     const [showSuccess, setShowSuccess] = useState(false);
-    const [previewIcon, setPreviewIcon] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const { data, setData, post, processing, errors } = useForm<{
-        name: string;
-        icon: File | string | null;
-    }>({
-        name: name ?? '',
-        icon: null,
+
+    const { data, setData, processing, errors } = useForm({
+        name: tech.name || '',
+        icon: null as File | null,
     });
+
+    const [previewIcon, setPreviewIcon] = useState<string | null>(
+        tech.icon ? `/storage/${tech.icon}` : null,
+    );
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
 
         if (file) {
             setData('icon', file);
-            setPreviewIcon(URL.createObjectURL(file)); // 👈 create preview URL
-        } else {
-            setData('icon', null);
-            setPreviewIcon(null);
+            setPreviewIcon(URL.createObjectURL(file));
         }
     };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         setShowSuccess(false);
 
-        post(route('admin.tech.stack.store'), {
-            onSuccess: () => {
+        const formData = new FormData();
+        formData.append('name', data.name);
+
+        if (data.icon) {
+            formData.append('icon', data.icon);
+        }
+
+        formData.append('_method', 'PUT');
+
+        router.post(route('admin.tech.stack.update', tech.id), formData, {
+            onSuccess: (page) => {
                 setShowSuccess(true);
-                setPreviewIcon(null);
 
-                setData({
-                    name: '',
-                    icon: null,
-                });
+                const updatedCategory = page.props.tech as TechStackProps;
 
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
+                if (updatedCategory.icon) {
+                    setPreviewIcon(`/storage/${updatedCategory.icon}`);
                 }
             },
             onError: () => {
                 setShowSuccess(false);
             },
-            forceFormData: true,
+            preserveScroll: true,
         });
     };
 
@@ -66,27 +78,26 @@ export default function Create({ name }: TechStackProps) {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Create Tech Stack
+                    Edit Tech Stack
                 </h2>
             }
         >
-            <Head title="Create Tech Stack" />
+            <Head title="Edit Tech Stack" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <TextHeaderCard
-                                title="Add Tech Stack"
-                                description="Create a new tech stack."
+                                title="Edit Tech Stack"
+                                description="Update the details of this tech stack."
                             />
 
                             {showSuccess && (
                                 <div className="mt-4 rounded bg-green-100 p-4 text-sm text-green-800">
-                                    Data created successfully.
+                                    Data updated successfully!
                                 </div>
                             )}
-
                             {Object.keys(errors).length > 0 && (
                                 <div className="mt-4 rounded bg-red-100 p-4 text-sm text-red-700">
                                     Please fix the errors below.
@@ -105,7 +116,7 @@ export default function Create({ name }: TechStackProps) {
                                         id="name"
                                         name="name"
                                         className="mt-1 block w-full"
-                                        placeholder="Tech Stack Name"
+                                        placeholder="Category Project Name"
                                         value={data.name}
                                         onChange={(e) =>
                                             setData('name', e.target.value)
@@ -122,7 +133,7 @@ export default function Create({ name }: TechStackProps) {
 
                                 <div className="mt-4">
                                     <InputLabel htmlFor="icon" value="Icon" />
-                                    {/* Preview Icon */}
+
                                     {previewIcon && (
                                         <img
                                             src={previewIcon}
@@ -130,13 +141,13 @@ export default function Create({ name }: TechStackProps) {
                                             className="mb-2 h-12 w-12 rounded-md border object-contain"
                                         />
                                     )}
+
                                     <TextInput
                                         type="file"
                                         id="icon"
                                         name="icon"
                                         className="mt-1 block w-full rounded-md border-gray-300 p-2 ring-1 ring-gray-300"
                                         onChange={handleFileChange}
-                                        ref={fileInputRef}
                                     />
                                     {errors.icon && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -158,7 +169,9 @@ export default function Create({ name }: TechStackProps) {
                                         type="submit"
                                         disabled={processing}
                                     >
-                                        {processing ? 'Saving...' : 'Save'}
+                                        {processing
+                                            ? 'Saving...'
+                                            : 'Save Changes'}
                                     </PrimaryButton>
                                 </div>
                             </form>

@@ -137,6 +137,7 @@ export default function Create({ name, description }: CategoryProjectProps) {
                                             className="mb-2 h-12 w-12 rounded-md border object-contain"
                                         />
                                     )}
+
                                     <TextInput
                                         type="file"
                                         id="icon"
