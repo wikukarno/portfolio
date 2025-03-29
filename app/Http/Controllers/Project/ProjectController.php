@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -12,7 +15,17 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $projects = Project::where('user_id', Auth::id())
+                ->latest()
+                ->paginate(10);
+
+            return Inertia::render('Project/Index', [
+                'projects' => $projects,
+            ]);
+        } catch (\Throwable $e) {
+            return back()->withErrors('Failed to load data.');
+        }
     }
 
     /**

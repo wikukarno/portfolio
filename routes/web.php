@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryProject\CategoryProjectController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\TechStack\TechStackController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,15 @@ Route::prefix('admin')
         Route::put('/tech-stack/{id}', [TechStackController::class, 'update'])->name('tech.stack.update');
         Route::delete('/tech-stack/{id}', [TechStackController::class, 'destroy'])->name('tech.stack.destroy');
         // End Route Tech Stack
+
+        // Route Project
+        Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
+        Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
+        Route::post('/project/store', [ProjectController::class, 'store'])->name('project.store');
+        Route::get('/project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+        Route::put('/project/{id}', [ProjectController::class, 'update'])->name('project.update');
+        Route::delete('/project/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
+        // End Route Project
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
